@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using TrybeHotel.Models;
 using TrybeHotel.Repository;
-using TrybeHotel.Dto;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace TrybeHotel.Controllers
 {
@@ -20,12 +17,20 @@ namespace TrybeHotel.Controllers
         
         [HttpGet]
         public IActionResult GetHotels(){
-            throw new NotImplementedException();
+            var hotels = _repository.GetHotels();
+            
+            if (hotels.Count() <= 0)
+            {
+                return NotFound("Nenhum hotel foi encontrado.");
+            }
+            return Ok(hotels);
         }
 
         [HttpPost]
         public IActionResult PostHotel([FromBody] Hotel hotel){
-            throw new NotImplementedException();
+            var result = _repository.AddHotel(hotel);
+
+            return Created("Hotel adicionado.", result);
         }
 
 
