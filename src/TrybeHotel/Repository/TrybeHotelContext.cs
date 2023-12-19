@@ -7,8 +7,8 @@ public class TrybeHotelContext : DbContext, ITrybeHotelContext
     public DbSet<City> Cities { get; set; }
     public DbSet<Hotel> Hotels { get; set; }
     public DbSet<Room> Rooms { get; set; }
-    public DbSet<User> Users { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-    public DbSet<Booking> Bookings { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+    public DbSet<User> Users { get; set; }
+    public DbSet<Booking> Bookings { get; set; }
 
     public TrybeHotelContext(DbContextOptions<TrybeHotelContext> options) : base(options) {
         Seeder.SeedUserAdmin(this);
@@ -17,7 +17,7 @@ public class TrybeHotelContext : DbContext, ITrybeHotelContext
     
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) 
     {
-        optionsBuilder.UseSqlServer(@"Server=localhost;Database=HotelsDB;User=SA;Password=SenhaSuperSecreta12!;TrustServerCertificate=True");
+        optionsBuilder.UseSqlServer(@"Server=localhost;Database=TrybeHotel;User=SA;Password=TrybeHotel12!;TrustServerCertificate=True");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -41,6 +41,19 @@ public class TrybeHotelContext : DbContext, ITrybeHotelContext
                     .HasOne(r => r.Hotel)
                     .WithMany(h => h.Rooms)
                     .HasForeignKey(r => r.HotelId);
+
+        modelBuilder.Entity<User>()
+                    .HasKey(u => u.UserId);
+        modelBuilder.Entity<User>()
+                    .HasMany(b => b.Booking)
+                    .WithOne(u => u.User);
+        
+        modelBuilder.Entity<Booking>()
+                    .HasKey(b => b.BookingId);
+        modelBuilder.Entity<Booking>()
+                    .HasOne(u => u.User)
+                    .WithMany(b => b.Booking);
+                    
     }
 
 }
