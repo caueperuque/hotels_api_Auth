@@ -1,5 +1,6 @@
 using TrybeHotel.Models;
 using TrybeHotel.Dto;
+using FluentAssertions;
 
 namespace TrybeHotel.Repository
 {
@@ -17,44 +18,51 @@ namespace TrybeHotel.Repository
 
         public UserDto Login(LoginDto login)
         {
-           throw new NotImplementedException();
+            throw new NotImplementedException();
         }
         public UserDto Add(UserDtoInsert user)
         {
             var newUser = new User()
             {
                 Name = user.Name,
+                Password = user.Password,
                 Email = user.Email,
-                Password = user.Email,
-                UserType = "client"
+                UserType = "client",
             };
-            _context.Users.Add(newUser); 
+            _context.Users.Add(newUser);
             _context.SaveChanges();
-
-            return new UserDto() 
+            return new UserDto()
             {
-                userId = newUser.UserId, 
-                Email = newUser.Email,
+                userId = newUser.UserId,
                 Name = newUser.Name,
+                Email = newUser.Email,
                 userType = newUser.UserType
             };
         }
 
         public UserDto GetUserByEmail(string userEmail)
         {
-            var existUser = _context.Users.FirstOrDefault(u => u.Email == userEmail);
-            return new UserDto()
+            var userByEmail = _context.Users.FirstOrDefault(u => u.Email == userEmail);
+
+            if (userByEmail != null)
             {
-                Email = existUser.Email,
-                Name = existUser.Name,
-                userId = existUser.UserId,
-                userType = existUser.UserType
-            };
+                return new UserDto()
+                {
+                    Name = userByEmail.Name,
+                    Email = userByEmail.Email,
+                    userType = userByEmail.UserType,
+                    userId = userByEmail.UserId
+                };
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public IEnumerable<UserDto> GetUsers()
         {
-           throw new NotImplementedException();
+            throw new NotImplementedException();
         }
 
     }
