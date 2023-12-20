@@ -42,17 +42,22 @@ public class TrybeHotelContext : DbContext, ITrybeHotelContext
                     .WithMany(h => h.Rooms)
                     .HasForeignKey(r => r.HotelId);
 
+        modelBuilder.Entity<Room>()
+            .HasMany(b => b.Bookings)
+            .WithOne(r => r.Room)
+            .HasForeignKey(b => b.RoomId);
+
         modelBuilder.Entity<User>()
                     .HasKey(u => u.UserId);
         modelBuilder.Entity<User>()
-                    .HasMany(b => b.Booking)
+                    .HasMany(b => b.Bookings)
                     .WithOne(u => u.User);
         
         modelBuilder.Entity<Booking>()
                     .HasKey(b => b.BookingId);
         modelBuilder.Entity<Booking>()
                     .HasOne(u => u.User)
-                    .WithMany(b => b.Booking);
+                    .WithMany(b => b.Bookings);
                     
     }
 
