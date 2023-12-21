@@ -25,16 +25,14 @@ namespace TrybeHotel.Controllers
 
         [HttpPost]
         public IActionResult Add([FromBody] UserDtoInsert user)
-        {
-            Dictionary<string, string> errorMessage = new Dictionary<string, string>();
-            errorMessage["message"] = "User email already exists";
-            if (_repository.GetUserByEmail(user.Email) == null)
+        {;
+            if (_repository.GetUserByEmail(user.Email) is null)
             {
                 var createdUser = _repository.Add(user);
                 return Created("User created", createdUser);
             }
 
-            return Conflict(errorMessage);
+            return Conflict(new { message = "User email already exists" });
         }
     }
 }

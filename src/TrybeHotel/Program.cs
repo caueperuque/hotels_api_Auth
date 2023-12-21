@@ -26,6 +26,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews()
                 .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddHttpClient();
+builder.Services.AddScoped<TokenGenerator>();
 
 
 builder.Services.Configure<TokenOptions>(
