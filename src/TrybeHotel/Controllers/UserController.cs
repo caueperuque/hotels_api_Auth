@@ -20,12 +20,14 @@ namespace TrybeHotel.Controllers
         
         [HttpGet]
         public IActionResult GetUsers(){
-            throw new NotImplementedException();
+            var users = _repository.GetUsers();
+            return Ok(users);
         }
 
         [HttpPost]
         public IActionResult Add([FromBody] UserDtoInsert user)
         {
+            Console.WriteLine(user);
             if (_repository.GetUserByEmail(user.Email) is null)
             {
                 var createdUser = _repository.Add(user);

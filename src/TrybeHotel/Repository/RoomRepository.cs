@@ -45,10 +45,10 @@ namespace TrybeHotel.Repository
                 .ThenInclude(h => h.City)
                 .FirstOrDefault(r => r.RoomId == room.RoomId);
 
-            if (addedRoom == null)
-            {
-                throw new Exception("Falha ao adicionar o quarto.");
-            }
+            // if (addedRoom == null)
+            // {
+            //     throw new Exception("Falha ao adicionar o quarto.");
+            // }
 
             var roomDto = new RoomDto
             {

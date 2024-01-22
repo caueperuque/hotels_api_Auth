@@ -36,16 +36,17 @@ namespace TrybeHotel.Controllers
         [Authorize(Policy = "admin")]
         public IActionResult PostRoom([FromBody] Room room)
         {
-
-            var result = _repository.AddRoom(room);
-            Console.Write(result);
+            Console.WriteLine("->>>>>>> conseguiu fazer o Add no repository");
             try
             {
-                return Created("Quarto adicionado.", result);
+                var result = _repository.AddRoom(room);
+                Console.WriteLine("->>>>>>> conseguiu fazer o Add no repository");
+                return Created("", result);
 
             }
             catch(Exception ex)
             {
+                Console.WriteLine(ex.Message + "-----------------------------------");
                 return BadRequest(ex.Message);
             }
 

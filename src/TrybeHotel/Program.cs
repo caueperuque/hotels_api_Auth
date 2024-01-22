@@ -26,7 +26,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddControllersWithViews()
                 .AddJsonOptions(x => x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 builder.Services.AddHttpClient();
-builder.Services.AddScoped<TokenGenerator>();
 
 
 builder.Services.Configure<TokenOptions>(
@@ -55,12 +54,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("admin", policy =>
-    {
-        policy.RequireClaim(ClaimTypes.Email);
-        policy.RequireRole("admin");
-    });
-
+    options.AddPolicy("Admin", policy => policy.RequireClaim(ClaimTypes.Email).RequireClaim(ClaimTypes.Role, "admin"));
     options.AddPolicy("Client", policy => policy.RequireClaim(ClaimTypes.Email));
 });
 

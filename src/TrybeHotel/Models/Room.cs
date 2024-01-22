@@ -14,5 +14,5 @@ public class Room
     public int HotelId { get; set; }
     public Hotel? Hotel { get; set; }
 
-    public ICollection<Booking> Bookings { get; set; }
+    public ICollection<Booking>? Bookings { get; set; }
 }
