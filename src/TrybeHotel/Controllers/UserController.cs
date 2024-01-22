@@ -25,7 +25,7 @@ namespace TrybeHotel.Controllers
 
         [HttpPost]
         public IActionResult Add([FromBody] UserDtoInsert user)
-        {;
+        {
             if (_repository.GetUserByEmail(user.Email) is null)
             {
                 var createdUser = _repository.Add(user);

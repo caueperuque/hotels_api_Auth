@@ -37,44 +37,36 @@ namespace TrybeHotel.Repository
 
         public RoomDto AddRoom(Room room)
         {
-            try
+            _context.Rooms.Add(room);
+            _context.SaveChanges();
+
+            var addedRoom = _context.Rooms
+                .Include(r => r.Hotel)
+                .ThenInclude(h => h.City)
+                .FirstOrDefault(r => r.RoomId == room.RoomId);
+
+            if (addedRoom == null)
             {
-                _context.Rooms.Add(room);
-                _context.SaveChanges();
+                throw new Exception("Falha ao adicionar o quarto.");
+            }
 
-                var addedRoom = _context.Rooms
-                    .Include(r => r.Hotel)
-                    .ThenInclude(h => h.City)
-                    .FirstOrDefault(r => r.RoomId == room.RoomId);
-
-                if (addedRoom == null)
+            var roomDto = new RoomDto
+            {
+                roomId = addedRoom.RoomId,
+                name = addedRoom.Name,
+                capacity = addedRoom.Capacity,
+                image = addedRoom.Image,
+                hotel = new HotelDto
                 {
-                    throw new Exception("Falha ao adicionar o quarto.");
+                    hotelId = addedRoom.Hotel.HotelId,
+                    name = addedRoom.Hotel.Name,
+                    address = addedRoom.Hotel.Address,
+                    cityId = addedRoom.Hotel.CityId,
+                    cityName = addedRoom.Hotel.City.Name
                 }
+            };
 
-                var roomDto = new RoomDto
-                {
-                    roomId = addedRoom.RoomId,
-                    name = addedRoom.Name,
-                    capacity = addedRoom.Capacity,
-                    image = addedRoom.Image,
-                    hotel = new HotelDto
-                    {
-                        hotelId = addedRoom.Hotel.HotelId,
-                        name = addedRoom.Hotel.Name,
-                        address = addedRoom.Hotel.Address,
-                        cityId = addedRoom.Hotel.CityId,
-                        cityName = addedRoom.Hotel.City.Name
-                    }
-                };
-
-                return roomDto;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                return new RoomDto();
-            }
+            return roomDto;
         }
 
         public void DeleteRoom(int RoomId)
@@ -85,7 +77,7 @@ namespace TrybeHotel.Repository
                 _context.Rooms.Remove(roomDeleted);
                 _context.SaveChanges();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }

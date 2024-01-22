@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TrybeHotel.Models;
@@ -28,7 +29,8 @@ namespace TrybeHotel.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "Admin")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "admin")]
         public IActionResult PostHotel([FromBody] Hotel hotel){
             var result = _repository.AddHotel(hotel);
 

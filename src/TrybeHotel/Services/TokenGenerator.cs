@@ -42,11 +42,8 @@ namespace TrybeHotel.Services
         private ClaimsIdentity AddClaims(UserDto user)
         {
             var claims = new ClaimsIdentity();
-            if (user.userType == "admin")
-            {
-                claims.AddClaim(new Claim(ClaimTypes.Role, "admin"));
-            }
-
+            
+            claims.AddClaim(new Claim(ClaimTypes.Role, user.userType));
             claims.AddClaim(new Claim(ClaimTypes.Email, user.Email));
 
             return claims;
