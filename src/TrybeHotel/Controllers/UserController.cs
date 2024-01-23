@@ -4,6 +4,7 @@ using TrybeHotel.Repository;
 using TrybeHotel.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 namespace TrybeHotel.Controllers
 {
@@ -19,9 +20,20 @@ namespace TrybeHotel.Controllers
         }
         
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [Authorize(Policy = "admin")]
         public IActionResult GetUsers(){
-            var users = _repository.GetUsers();
-            return Ok(users);
+            try
+            {
+                var userRole = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                if (userRole is null) return Unauthorized();
+                var users = _repository.GetUsers();
+                return Ok(users);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost]

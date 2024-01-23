@@ -49,15 +49,22 @@ namespace TrybeHotel.Controllers
         [Authorize(Policy = "Client")]
         public IActionResult GetBooking(int Bookingid)
         {
-            var uEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            try
+            {
+                var uEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-            if (uEmail is null) return Unauthorized();
+                if (uEmail is null) return Unauthorized();
 
-            var bookingResponse = _repository.GetBooking(Bookingid, uEmail);
+                var bookingResponse = _repository.GetBooking(Bookingid, uEmail);
 
-            if (bookingResponse is null) return Unauthorized();
+                if (bookingResponse is null) return Unauthorized();
 
-            return Ok(bookingResponse);
+                return Ok(bookingResponse);
+            }
+            catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
